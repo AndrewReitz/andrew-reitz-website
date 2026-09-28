@@ -1,0 +1,54 @@
+[tools]
+node = "25"
+
+[tasks.newblog]
+description = "Create a new empty blog post file"
+run = '''
+#!/usr/bin/env bash
+
+today=$(date +%F)
+file="src/blog/posts/$today.md"
+[[ -e "$file" ]] && { echo "$file already exists" >&2; exit 1; }
+cat > "$file" <<EOF
+---
+title: "Put the Title Here!"
+date: $today
+author: "Andrew Reitz"
+featured_image: "/images/new_feature_image.png"
+---
+
+EOF
+'''
+
+[tasks.sign]
+description = "PGP sign pages and blog posts (all changed, or the given file)"
+usage = 'arg "[file]" help="File to sign; defaults to every page/post without an up-to-date signature"'
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+key="65132A0E64C93BC1EDB4BA6202219C7697C0FB6E"
+if [[ -n "${usage_file:-}" ]]; then
+  files=("$usage_file")
+else
+  files=()
+  for f in src/*.md src/blog/posts/*.md; do
+    [[ "$f.asc" -nt "$f" ]] && continue
+    files+=("$f")
+  done
+fi
+
+for f in "${files[@]}"; do
+  gpg --yes --armor --local-user "$key" --detach-sign "$f"
+  echo "Signed $f -> $f.asc"
+done
+'''
+
+[tasks.fmt]
+description = "Wrap Markdown at 80 columns (all files, or the given file)"
+usage = 'arg "[file]" help="Markdown file to format; defaults to src/**/*.md"'
+run = 'npx prettier --prose-wrap always --print-width 80 --write "${usage_file:-src/**/*.md}"'
+
+[tasks.dev]
+description = "Run the development server"
+run = "npm run dev"

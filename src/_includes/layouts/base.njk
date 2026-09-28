@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "Andrew Reitz" }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB</text></svg>">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-950 text-gray-100">
+  <header class="border-b border-gray-800">
+    <nav class="max-w-2xl mx-auto flex items-center gap-6 px-4 py-4">
+      <a href="/" class="font-semibold">Andrew Reitz</a>
+      <a href="/blog/" class="text-gray-400 hover:text-gray-100">Blog</a>
+      <a href="/links/" class="text-gray-400 hover:text-gray-100">Links</a>
+    </nav>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 py-8 flex-1 w-full">
+    <div class="prose prose-invert max-w-none">
+      {{ content | safe }}
+    </div>
+    {% if page.inputPath | isSigned %}
+    {% set src = page.inputPath | sourceUrl %}
+    <p class="mt-8 text-sm text-gray-400">
+      Signed with my <a href="/publickey.txt" class="underline hover:text-gray-100">PGP key</a>:
+      <a href="{{ src }}" class="underline hover:text-gray-100">source</a> &middot;
+      <a href="{{ src }}.asc" class="underline hover:text-gray-100">signature</a>
+    </p>
+    {% endif %}
+  </main>
+
+  <footer class="border-t border-gray-800">
+    <div class="max-w-2xl mx-auto px-4 py-4 text-sm text-gray-500">
+      &copy; {{ currentYear }} Andrew Reitz
+    </div>
+  </footer>
+</body>
+</html>

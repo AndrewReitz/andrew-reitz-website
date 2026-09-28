@@ -1,0 +1,23 @@
+{
+  "name": "andrew-reitz-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf _site",
+    "build:css": "tailwindcss -i ./src/css/tailwind.css -o ./_site/css/style.css --minify",
+    "build:eleventy": "eleventy",
+    "build": "npm run clean && npm-run-all build:css build:eleventy",
+    "watch:css": "tailwindcss -i ./src/css/tailwind.css -o ./_site/css/style.css --watch",
+    "watch:eleventy": "eleventy --serve --watch",
+    "dev": "npm-run-all --parallel watch:css watch:eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.6",
+    "@tailwindcss/cli": "^4.3.0",
+    "@tailwindcss/typography": "^0.5.20",
+    "npm-run-all2": "^7.0.0",
+    "prettier": "^3.9.9",
+    "tailwindcss": "^4.3.0"
+  }
+}
